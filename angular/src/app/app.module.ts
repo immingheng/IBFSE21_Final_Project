@@ -1,11 +1,11 @@
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
-import { RouterModule, Routes } from '@angular/router';
+import { RouterModule, Routes, CanActivate } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http'
 
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
-import { faKey, faUser } from '@fortawesome/free-solid-svg-icons'
+import { faKey, faUser, faEnvelope } from '@fortawesome/free-solid-svg-icons'
 
 
 import { AppComponent } from './app.component';
@@ -16,7 +16,14 @@ import { LoginComponent } from './authentication/login/login.component';
 import { SignupComponent } from './component/signup/signup.component';
 import { BuyerComponent } from './component/buyer/buyer.component';
 import { SellerComponent } from './component/seller/seller.component';
+import { SellerGuardService } from './services/seller-guard.service';
+import { AddNewItemComponent } from './component/add-new-item/add-new-item.component';
+import { ForgetPasswordComponent } from './authentication/forget-password/forget-password.component';
+import { ShopeeItemsService } from './services/Shopee.service';
+import { LazadaItemsService } from './services/Lazada.service';
 
+
+// Apply canActivate: [SellerGuardService] to prevent unauthorised access to Seller & addItem.
 const appRoutes : Routes = [
   {path:"", component:HomeComponent},
   {path:"about", component:AboutComponent},
@@ -25,8 +32,9 @@ const appRoutes : Routes = [
   {path:"signup", component:SignupComponent},
   {path:"buyer", component:BuyerComponent},
   {path:"seller", component:SellerComponent},
+  {path:"seller/addItem", component:AddNewItemComponent},
+  {path:"forgetPassword", component:ForgetPasswordComponent},
   {path:'**',redirectTo:'/', pathMatch:'full'}
-
 ]
 
 @NgModule({
@@ -38,7 +46,9 @@ const appRoutes : Routes = [
     LoginComponent,
     SignupComponent,
     BuyerComponent,
-    SellerComponent
+    SellerComponent,
+    AddNewItemComponent,
+    ForgetPasswordComponent
   ],
   imports: [
     BrowserModule,
@@ -47,12 +57,14 @@ const appRoutes : Routes = [
     RouterModule.forRoot(appRoutes),
     FontAwesomeModule
     ],
-  providers: [],
+  providers: [ShopeeItemsService, LazadaItemsService, SellerGuardService],
   bootstrap: [AppComponent]
 })
+
 export class AppModule {
   constructor(library: FaIconLibrary){
     library.addIcons(faKey);
     library.addIcons(faUser);
+    library.addIcons(faEnvelope);
   }
- }
+}

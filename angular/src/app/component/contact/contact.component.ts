@@ -1,4 +1,8 @@
+import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { lastValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-contact',
@@ -7,9 +11,27 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ContactComponent implements OnInit {
 
-  constructor() { }
+  emailForm!: FormGroup;
+
+  constructor(private fb: FormBuilder,
+              private http: HttpClient,
+              private router: Router) { }
 
   ngOnInit(): void {
+    this.emailForm = this.fb.group({
+      subject: this.fb.control('',[Validators.required]),
+      message: this.fb.control('',[Validators.required])
+    })
+
+  }
+
+  // POST THE FORM TO BACKEND FOR EMAIL TO BE SENT USING SPRINGBOOT EMAIL
+  public async post2SB(){
+    const email = this.emailForm.value;
+    const send2SB = await lastValueFrom(this.http.post<any>('/api/email',JSON.stringify(email),{headers:{'Content-Type':'application/json'}}));
+    alert('Your email has been sent!');
+    this.emailForm.reset();
+    this.router.navigate(['/']);
   }
 
 }
