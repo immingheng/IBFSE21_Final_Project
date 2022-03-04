@@ -1,6 +1,7 @@
 package ibf2021.springboot.models;
 
-public class item {
+// TODO MIGHT HAVE TO EDIT THIS
+public class Item {
     private String product_name;
     private String category_name;
     private String product_cover_image;
@@ -24,10 +25,10 @@ public class item {
     private String preorder;
     private String condition;
 
-    public item() {
+    public Item() {
     }
 
-    public item(String product_name, String category_name, String product_cover_image, String product_image1,
+    public Item(String product_name, String category_name, String product_cover_image, String product_image1,
             String product_image2, String product_image3, String product_image4, String product_image5,
             String product_image6, String product_image7, String product_image8, String product_description,
             String brand, String color, int recommended_age, String warranty_type, String material, float price,
