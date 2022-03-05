@@ -1,10 +1,10 @@
-package ibf2021.psf_project;
+package ibf2021.springboot;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class PsfProjectApplicationTests {
+class ServerTests {
 
 	@Test
 	void contextLoads() {

@@ -41,9 +41,9 @@
     <!-- THE HREF LINKS ARE HARDCODED AS THE TOKEN REQUIRES HASHING OF THE API SECRET KEY WHICH WILL REQUIRE EXTERNAL MODULES TO HANDLE - THIS CAN BE HANDLED IN THE FUTURE -->
     <!-- HAVE TO MODIFY TOKEN & REDIRECT URLS DURING DEPLOYMENT -->
     <button class="btn btn-outline" type="button" [disabled]="shopeeLinked"><b><a id="rul"
-          href="https://partner.test-stable.shopeemobile.com/api/v1/shop/auth_partner?id=1006071&token=b30cdb913e7c11b6a22ae86ba7739254acd471ab48c69d3bfaf24c48b49bf81d&redirect=http://localhost:4200/#/seller">Link</a></b></button>
+          href="https://partner.test-stable.shopeemobile.com/api/v1/shop/auth_partner?id=1006071&token=d316e3e783a5366ec541f1d02ecd6fc8ebd46a8da9a3734c684b1980afe64840&redirect=https://my-cute-shop.vercel.app/seller">Link</a></b></button>
     <button class="btn btn-outline" type="button" [disabled]="!shopeeLinked" (click)="unlinkShop()"><b><a id="rul"
-          href="https://partner.test-stable.shopeemobile.com/api/v1/shop/cancel_auth_partner?id=1006071&token=b30cdb913e7c11b6a22ae86ba7739254acd471ab48c69d3bfaf24c48b49bf81d&redirect=http://localhost:4200/seller">Unlink</a></b></button>
+          href="https://partner.test-stable.shopeemobile.com/api/v1/shop/cancel_auth_partner?id=1006071&token=d316e3e783a5366ec541f1d02ecd6fc8ebd46a8da9a3734c684b1980afe64840&redirect=https://my-cute-shop.vercel.app/seller">Unlink</a></b></button>
     <button class="btn btn-outline" type="button" (click)="getShopeeListings()" *ngIf="shopeeLinked"><b>Get
         Listings</b></button>
   </div>
