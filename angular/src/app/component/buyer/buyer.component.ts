@@ -31,7 +31,7 @@ export class BuyerComponent implements OnInit {
   ScrapeSearchSB(){
     this.searchResult = this.searchForm.value();
     console.log('Search result --> '+ this.searchResult);
-    this.query = lastValueFrom(this.http.post<String>('api/buyer/search', JSON.stringify(this.searchResult)));
+    // this.query = lastValueFrom(this.http.post<String>('api/buyer/search', JSON.stringify(this.searchResult)));
     let resolve = this.query.then(results => {
       this.noQueryResults = false;
 

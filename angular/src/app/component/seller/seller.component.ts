@@ -52,7 +52,7 @@ export class SellerComponent implements OnInit {
         this.imageUrl = this.domSanitizer.bypassSecurityTrustUrl(itemImage);
         this.imageUrls.push(this.imageUrl);
       })
-      console.log(this.imageUrls);
+      // console.log(this.imageUrls);
     });
   }
 

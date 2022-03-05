@@ -1,6 +1,5 @@
 package ibf2021.springboot.models;
 
-// TODO MIGHT HAVE TO EDIT THIS
 public class Item {
     private String product_name;
     private String category_name;
