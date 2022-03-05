@@ -12,7 +12,17 @@
         <li><a id="rul" routerLink="/about">About</a></li>
         <li><a id="rul" routerLink="/contact">Contact</a></li>
         <li tabindex="0">
-          <a *ngIf="!isLoggedIn" id="rul" routerLink="/login">
+          <ng-container *ngIf="auth.isAuthenticated$ | async; else loggedOut">
+            <a (click)="auth.logout({ returnTo: document.location.origin })">
+              Log out
+            </a>
+          </ng-container>
+
+          <ng-template #loggedOut>
+            <a (click)="auth.loginWithRedirect()">Log in</a>
+          </ng-template>
+
+          <!-- <a *ngIf="!isLoggedIn" id="rul" (click)="auth.loginWithRedirect()">
             Login
             <svg class="fill-current" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
               <path d="M7.41,8.58L12,13.17L16.59,8.58L18,10L12,16L6,10L7.41,8.58Z" />
@@ -23,14 +33,15 @@
           </ul>
           <a *ngIf="isLoggedIn" id="rul" routerLink="/" (click)="logout()">
             Logout
-          </a>
+          </a> -->
         </li>
 
       </ul>
     </div>
   </div>
-  <br>
-
+  <div style="font-size: x-small" class="d-flex justify-content-center" *ngIf="auth.user$ | async as user">
+    <p>Hello {{user.name}}!</p>
+  </div>
   <router-outlet></router-outlet>
 
   <br>

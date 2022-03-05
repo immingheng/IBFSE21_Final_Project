@@ -1,4 +1,6 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
+import { Component, Inject, Input, OnInit } from '@angular/core';
+import { AuthService } from '@auth0/auth0-angular';
 
 
 @Component({
@@ -13,19 +15,13 @@ export class AppComponent implements OnInit{
   d = new Date();
   year = this.d.getFullYear();
 
-  @Input()
-  isLoggedIn: boolean = true;
 
   ngOnInit(): void {
   }
 
-  constructor(){
+  constructor(@Inject(DOCUMENT) public document: Document, public auth: AuthService){
   }
 
-  public logout(){
-    this.isLoggedIn = false;
-    alert('You have logged out!');
-  }
 
 
 

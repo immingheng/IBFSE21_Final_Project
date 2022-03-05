@@ -21,6 +21,7 @@ import { AddNewItemComponent } from './component/add-new-item/add-new-item.compo
 import { ForgetPasswordComponent } from './authentication/forget-password/forget-password.component';
 import { ShopeeItemsService } from './services/Shopee.service';
 import { LazadaItemsService } from './services/Lazada.service';
+import { AuthModule } from '@auth0/auth0-angular';
 
 
 // Apply canActivate: [SellerGuardService] to prevent unauthorised access to Seller & addItem.
@@ -55,7 +56,11 @@ const appRoutes : Routes = [
     FormsModule, ReactiveFormsModule,
     HttpClientModule,
     RouterModule.forRoot(appRoutes),
-    FontAwesomeModule
+    FontAwesomeModule,
+    AuthModule.forRoot({
+      domain:'dev-r01a92vl.us.auth0.com',
+      clientId:'KhnVRfaSBikVDALT74nTsEGNpkatLvCq'
+    })
     ],
   providers: [ShopeeItemsService, LazadaItemsService, SellerGuardService],
   bootstrap: [AppComponent]
