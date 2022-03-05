@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-add-new-item',
@@ -7,9 +8,19 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AddNewItemComponent implements OnInit {
 
-  constructor() { }
+  addNewItemForm!: FormGroup;
+  categories!: String[];
+
+  constructor(private fb: FormBuilder) { }
 
   ngOnInit(): void {
+    this.addNewItemForm = this.fb.group({
+
+    })
+  }
+
+  public onSubmit(){
+
   }
 
 }

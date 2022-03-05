@@ -28,7 +28,7 @@ export class ContactComponent implements OnInit {
   // POST THE FORM TO BACKEND FOR EMAIL TO BE SENT USING SPRINGBOOT EMAIL
   public async post2SB(){
     const email = this.emailForm.value;
-    const send2SB = await lastValueFrom(this.http.post<any>('/api/email',JSON.stringify(email),{headers:{'Content-Type':'application/json'}})).then(()=>{
+    const send2SB = await lastValueFrom(this.http.post<any>('https://my-cute-shop.herokuapp.com/api/email',JSON.stringify(email),{headers:{'Content-Type':'application/json'}})).then(()=>{
       alert('Your email has been sent!')});
     this.emailForm.reset();
     this.router.navigate(['/']);

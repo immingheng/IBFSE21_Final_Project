@@ -10,7 +10,7 @@ export class AuthService{
   constructor(private http:HttpClient){}
 
   public async loginUser(username: String){
-    let message = await lastValueFrom(this.http.get(`api/auth/user/${username}`))
+    let message = await lastValueFrom(this.http.get(`https://my-cute-shop.herokuapp.com/api/auth/user/${username}`))
   }
 
 

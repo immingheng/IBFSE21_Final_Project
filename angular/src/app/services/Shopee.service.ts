@@ -15,7 +15,7 @@ export class ShopeeItemsService{
   data!: Listing;
   public getListings(shop_id: any): Promise<Item[]> {
     const params = new HttpParams().set('shop_id', shop_id);
-    return lastValueFrom(this.http.get<Item[]>('api/shopee/listings', {params}))
+    return lastValueFrom(this.http.get<Item[]>('https://my-cute-shop.herokuapp.com/api/shopee/listings', {params}))
   };
 
 
