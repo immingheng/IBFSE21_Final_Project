@@ -26,7 +26,7 @@ public class EmailRESTController {
     private EmailConfig emailConfig;
 
     @PostMapping
-    public ResponseEntity<String> emailFromAngularForm(@RequestBody Email payload) {
+    public ResponseEntity<Void> emailFromAngularForm(@RequestBody Email payload) {
         // logger.info("EMAIL OBJECT FROM ANGULAR-->" + payload.toString());
         // Creating mail senderr
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
@@ -47,7 +47,7 @@ public class EmailRESTController {
 
         // Send mail
         mailSender.send(mailMessage);
-        return null;
+        return ResponseEntity.ok().build();
 
     }
 

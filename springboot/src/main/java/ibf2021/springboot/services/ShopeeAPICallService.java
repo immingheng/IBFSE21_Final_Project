@@ -55,14 +55,15 @@ public class ShopeeAPICallService {
         return System.currentTimeMillis() / 1000;
     }
 
-    // Overloaded method to use hard-coded shop_id for development process
-    public ResponseEntity<List<Listing>> getItemLists() {
+    // METHOD RETURNS UP TO A MAXIMUM OF 100 PRODUCTS - WILL HAVE TO IMPLEMENT
+    // PAGINATION &/ SEARCH IN THE FUTURE FOR BOTH CLIENT AND SERVER SIDE
+    public ResponseEntity<List<Listing>> getItemLists(String shop_id) {
         List<Listing> listings = new ArrayList<>();
         String URI = "https://partner.test-stable.shopeemobile.com/api/v1/items/get";
         JsonObject requestBody = Json.createObjectBuilder()
                 .add("pagination_offset", 0)
                 .add("pagination_entries_per_page", 100)
-                .add("shopid", SHOPEE_SHOP_ID)
+                .add("shopid", Integer.parseInt(shop_id))
                 .add("partner_id", SHOPEE_PARTNER_ID)
                 .add("timestamp", getCurrentEpochTime())
                 .build();
@@ -80,7 +81,7 @@ public class ShopeeAPICallService {
         for (JsonValue item : jarray) {
             int item_id = item.asJsonObject().getInt("item_id");
             logger.info("item_id >> " + item_id);
-            JsonObject itemDetail = ResponseEntity2JSON(getItemDetail(item_id)).getJsonObject("item");
+            JsonObject itemDetail = ResponseEntity2JSON(getItemDetail(item_id, shop_id)).getJsonObject("item");
             Listing listing = new Listing();
             listing.setImage(itemDetail.getJsonArray("images").get(0).toString());
             listing.setDescription(itemDetail.getString("description"));
@@ -99,37 +100,13 @@ public class ShopeeAPICallService {
         return data;
     }
 
-    public ResponseEntity<String> getItemLists(String shop_id) {
-        String URI = "https://partner.test-stable.shopeemobile.com/api/v1/items/get";
-        JsonObject requestBody = Json.createObjectBuilder()
-                .add("pagination_offset", 0)
-                .add("pagination_entries_per_page", 100)
-                .add("shopid", Integer.parseInt(shop_id))
-                .add("partner_id", SHOPEE_PARTNER_ID)
-                .add("timestamp", getCurrentEpochTime())
-                .build();
-        logger.info("REQUEST BODY THAT WAS BUILT FOR getItemLists -> " +
-                requestBody.toString());
-        RequestEntity<String> req = RequestEntity.post(URI)
-                .contentType(MediaType.APPLICATION_JSON)
-                .header("Authorization", authHashHMACSHA256(URI, requestBody.toString(),
-                        SHOPEE_TEST_SECRET_KEY))
-                .body(requestBody.toString(), String.class);
-        logger.info("REQUEST ENTITY WITH HEADER AND ETC TO POST TO SHOPEE" +
-                req.toString());
-        RestTemplate template = new RestTemplate();
-        ResponseEntity<String> resp = template.exchange(req, String.class);
-        logger.info("RESPONSE FROM SHOPEE API ->" + resp.toString());
-        return resp;
-    }
-
     // Method to call after getting entire item lists to extract item_id and obtain
     // entire item detail to be saved into DB
-    public ResponseEntity<String> getItemDetail(int itemId) {
+    public ResponseEntity<String> getItemDetail(int itemId, String shop_id) {
         String URI = "https://partner.test-stable.shopeemobile.com/api/v1/item/get";
         JsonObject requestBody = Json.createObjectBuilder()
                 .add("item_id", itemId)
-                .add("shopid", SHOPEE_SHOP_ID)
+                .add("shopid", Integer.parseInt(shop_id))
                 .add("partner_id", SHOPEE_PARTNER_ID)
                 .add("timestamp", getCurrentEpochTime())
                 .build();
@@ -143,6 +120,54 @@ public class ShopeeAPICallService {
         ResponseEntity<String> resp = template.exchange(req, String.class);
         logger.info("RESPONSE FROM SHOPEE API ->" + resp.toString());
         return resp;
+    }
+
+    // Assumes that there will only be ONE IMAGE URL else have to carry out a loop
+    // to handle a Collection of image URL accordingly
+    public ResponseEntity<String> createItem(String imageURL, String shop_id) {
+        // To upload an item to SHOPEE, the API call flow goes like this:
+        // 1. Call into Image.UploadImg to convert URL image to Shopee image. (Image
+        // Hosting Website Images encapsulated with [""])
+        String ImageURI = "https://partner.test-stable.shopeemobile.com/api/v1/image/upload";
+        JsonArray images = Json.createArrayBuilder()
+                .add("[\"" + imageURL + "\"]").build();
+        JsonObject requestBody = Json.createObjectBuilder()
+                .add("images", images)
+                .add("shopid", Integer.parseInt(shop_id))
+                .add("partner_id", SHOPEE_PARTNER_ID)
+                .add("timestamp", getCurrentEpochTime())
+                .build();
+        logger.info("REQUEST BODY THAT WAS BUILT FOR image.uploadImg -> " + requestBody.toString());
+        RequestEntity<String> req = RequestEntity.post(ImageURI)
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", authHashHMACSHA256(ImageURI, requestBody.toString(), SHOPEE_TEST_SECRET_KEY))
+                .body(requestBody.toString(), String.class);
+        logger.info("REQUEST ENTITY WITH HEADER AND ETC TO POST TO SHOPEE" + req.toString());
+        RestTemplate template = new RestTemplate();
+        ResponseEntity<String> resp = template.exchange(req, String.class);
+        logger.info("RESPONSE FROM SHOPEE API ->" + resp.toString());
+
+        String shopeeImgUrl = ResponseEntity2JSON(resp).getJsonArray("images").get(0).asJsonObject()
+                .getString("shopee_image_url");
+        if (shopeeImgUrl.isEmpty()) {
+            String error_desc = ResponseEntity2JSON(resp).getJsonArray("images").get(0).asJsonObject()
+                    .getString("error_desc");
+            logger.warning("image.UploadImg failed due to " + error_desc);
+        }
+
+        // 2. Fetch categories and select a suitable category_id in order to fetch
+        // category attribute
+        // String CategoryURI =
+        // "https://partner.test-stable.shopeemobile.com/api/v1/shop_categorys/get";
+
+        // 3. Collect attribute for categoryid with endpoint item.GetAttribute
+        // 4. Call into logistics.GetLogistics to get information of logistics supported
+        // by the shop.
+        // 5. With all the information, call into item.Add end point to upload product -
+        // if the product is successfully uploaded, an item_id will generated and
+        // returned.
+
+        return null;
     }
 
 }

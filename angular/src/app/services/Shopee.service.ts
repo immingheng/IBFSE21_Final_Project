@@ -13,8 +13,9 @@ export class ShopeeItemsService{
   items!:Item[];
   item_ids: number[] = [];
   data!: Listing;
-  public getListings(): Promise<Item[]> {
-    return lastValueFrom(this.http.get<Item[]>('api/shopee/listings'));
+  public getListings(shop_id: any): Promise<Item[]> {
+    const params = new HttpParams().set('shop_id', shop_id);
+    return lastValueFrom(this.http.get<Item[]>('api/shopee/listings', {params}))
   };
 
 

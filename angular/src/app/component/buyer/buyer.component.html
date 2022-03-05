@@ -1,2 +1,39 @@
-<h1>TO BE IMPLEMENTED!</h1>
-<p>buyer works!</p>
+<div class="container-fluid">
+  <div *ngIf="noQueryResults" class="d-flex justify-content-center">
+    <h1>What do you want to buy?</h1>
+  </div>
+  <form *ngIf="noQueryResults" class="form" [formGroup]="searchForm" (ngSubmit)="ScrapeSearchSB()">
+    <label class="form-label" for="search"><b>Search: </b></label>
+    <input class="form-control" type="text" name="search" formControlName="search">
+    <br>
+    <div class="d-flex justify-content-center">
+      <button class="btn btn-dark" type="submit" [disabled]="this.searchForm.invalid">Search!</button>
+    </div>
+  </form>
+  <br>
+  <div *ngIf="!noQueryResults" class="d-flex justify-content-center">
+    <h1>Results:</h1>
+    <p></p>
+  </div>
+  <table *ngIf="!noQueryResults" class="table">
+    <thead>
+      <tr>
+        <th scope="col">Product Name</th>
+        <th scope="col">Product Rating</th>
+        <th scope="col">Product Price</th>
+        <th scope="col">Product Quantity</th>
+        <th scope="col">eCommerce Store</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let result of results">
+        <td>{{result.name}}</td>
+        <td>{{result.rating}}</td>
+        <td>{{result.price}}</td>
+        <td>{{result.quantity}]</td>
+        <td>{{result.origin}}</td>
+      </tr>
+    </tbody>
+  </table>
+
+</div>
