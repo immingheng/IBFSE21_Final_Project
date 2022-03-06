@@ -1,8 +1,0 @@
-auth0:
-  audience: undefined
-spring:
-  security:
-  oauth2:
-    resourceserver:
-      jwt:
-        issuer-uri: https://dev-r01a92vl.us.auth0.com
