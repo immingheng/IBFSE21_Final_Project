@@ -39,17 +39,18 @@
   <div class="container-fluid d-flex justify-content-around">
     <img class="img-fluid" src="assets\static\Shopee.png" height="30em" width="150em">
     <!-- THE HREF LINKS ARE HARDCODED AS THE TOKEN REQUIRES HASHING OF THE API SECRET KEY WHICH WILL REQUIRE EXTERNAL MODULES TO HANDLE - THIS CAN BE HANDLED IN THE FUTURE -->
-    <!-- DEVELOPMENT BUTTONS
+    <!-- DEVELOPMENT BUTTONS -->
     <button class="btn btn-outline" type="button" [disabled]="shopeeLinked"><b><a id="rul"
           href="https://partner.test-stable.shopeemobile.com/api/v1/shop/auth_partner?id=1006071&token=37a1082093c0b54cc0cf95c8a5c92a72a0437e6d1c7e1fb16f260867f32c3cc0&redirect=http://localhost:4200/seller">Link</a></b></button>
     <button class="btn btn-outline" type="button" [disabled]="!shopeeLinked" (click)="unlinkShop()"><b><a id="rul"
-          href="https://partner.test-stable.shopeemobile.com/api/v1/shop/cancel_auth_partner?id=1006071&token=37a1082093c0b54cc0cf95c8a5c92a72a0437e6d1c7e1fb16f260867f32c3cc0&redirect=http://localhost:4200/seller">Unlink</a></b></button> -->
+          href="https://partner.test-stable.shopeemobile.com/api/v1/shop/cancel_auth_partner?id=1006071&token=37a1082093c0b54cc0cf95c8a5c92a72a0437e6d1c7e1fb16f260867f32c3cc0&redirect=http://localhost:4200/seller">Unlink</a></b></button>
 
     <!-- PRODUCTION BUTTONS -->
-    <button class="btn btn-outline" type="button" [disabled]="shopeeLinked"><b><a id="rul"
+    <!-- <button class="btn btn-outline" type="button" [disabled]="shopeeLinked"><b><a id="rul"
           href="https://partner.test-stable.shopeemobile.com/api/v1/shop/auth_partner?id=1006071&token=d316e3e783a5366ec541f1d02ecd6fc8ebd46a8da9a3734c684b1980afe64840&redirect=https://my-cute-shop.vercel.app/seller">Link</a></b></button>
     <button class="btn btn-outline" type="button" [disabled]="!shopeeLinked" (click)="unlinkShop()"><b><a id="rul"
-          href="https://partner.test-stable.shopeemobile.com/api/v1/shop/cancel_auth_partner?id=1006071&token=d316e3e783a5366ec541f1d02ecd6fc8ebd46a8da9a3734c684b1980afe64840&redirect=https://my-cute-shop.vercel.app/seller">Unlink</a></b></button>
+          href="https://partner.test-stable.shopeemobile.com/api/v1/shop/cancel_auth_partner?id=1006071&token=d316e3e783a5366ec541f1d02ecd6fc8ebd46a8da9a3734c684b1980afe64840&redirect=https://my-cute-shop.vercel.app/seller">Unlink</a></b></button> -->
+
     <button class="btn btn-outline" type="button" (click)="getShopeeListings()" *ngIf="shopeeLinked"><b>Get
         Listings</b></button>
   </div>

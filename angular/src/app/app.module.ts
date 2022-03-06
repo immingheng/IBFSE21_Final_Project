@@ -27,6 +27,7 @@ import { AddNewItemComponent } from './component/add-new-item/add-new-item.compo
 import { ForgetPasswordComponent } from './authentication/forget-password/forget-password.component';
 import { ShopeeItemsService } from './services/Shopee.service';
 import { LazadaItemsService } from './services/Lazada.service';
+import { SearchResultsComponent } from './component/search-results/search-results.component';
 
 
 
@@ -38,6 +39,7 @@ const appRoutes : Routes = [
   // {path:"login", component:LoginComponent},
   // {path:"signup", component:SignupComponent},
   {path:"buyer", component:BuyerComponent},
+  {path:"buyer/search/:query", component:SearchResultsComponent},
   {path:"seller", component:SellerComponent, canActivate: [AuthGuard]},
   {path:"seller/addItem", component:AddNewItemComponent, canActivate:[AuthGuard]},
   {path:"forgetPassword", component:ForgetPasswordComponent},
@@ -55,7 +57,8 @@ const appRoutes : Routes = [
     BuyerComponent,
     SellerComponent,
     AddNewItemComponent,
-    ForgetPasswordComponent
+    ForgetPasswordComponent,
+    SearchResultsComponent
   ],
   imports: [
     BrowserModule,
@@ -70,27 +73,28 @@ const appRoutes : Routes = [
 
       // Specify configuration for interceptor
       // Interceptor will intercept any request to the specified uri to check if token exists and handle it accordingly.
-      httpInterceptor: {
-        allowedList:[
-          {
-            // Match any request that during development
-            uri:'http://localhost:8080/api/*',
-            // tokenOptions: {
-            //   // The attached token should target this audience
-            //   audience: 'http://localhost:8080',
+      // THEREFORE ANY CALL TO THE SERVER WITH ROUTE /API/* SHOULD BE ADDED WITH THE INTERCEPTORS
+      // httpInterceptor: {
+      //   allowedList:[
+      //     {
+      //       // Match any request that during development
+      //       uri:'http://localhost:8080/api/*',
+      //       tokenOptions: {
+      //         // The attached token should target this audience
+      //         audience: 'http://localhost:8080',
 
-            // }
-          },
-          {
-            // prod
-            uri:'https://my-cute-shop.herokuapp.com/api/*',
-            // tokenOptions:{
-            //   audience: 'https://my-cute-shop.herokuapp.com',
-            //   scope: 'read:current_user'
-            // }
-          }
-        ]
-      }
+      //       }
+      //     },
+      //     {
+      //       // prod
+      //       uri:'https://my-cute-shop.herokuapp.com/api/*',
+      //       tokenOptions:{
+      //         audience: 'https://my-cute-shop.herokuapp.com',
+      //         scope: 'read:current_user'
+      //       }
+      //     }
+      //   ]
+      // }
 
     })
     ],

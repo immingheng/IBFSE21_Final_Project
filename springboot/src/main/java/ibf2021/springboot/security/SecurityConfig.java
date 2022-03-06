@@ -31,20 +31,22 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
-        http.oauth2ResourceServer().jwt();
-
         // PROTECTING API END POINTS
         http.authorizeRequests()
                 .mvcMatchers(HttpMethod.POST, "/api/mail/**").permitAll()
-                .mvcMatchers(HttpMethod.GET, "/api/buyer/**").permitAll()
-                .anyRequest()
-                .authenticated()
-                .and().cors()
-                .configurationSource(corsConfigurationSource())
+                .mvcMatchers(HttpMethod.GET, "/api/**").permitAll()
+                .and().cors().configurationSource(corsConfigurationSource())
                 .and()
                 .oauth2ResourceServer()
-                .jwt()
-                .decoder(jwtDecoder());
+                .jwt();
+        // .anyRequest()
+        // .authenticated()
+        // .and().cors()
+        // .configurationSource(corsConfigurationSource())
+        // .and()
+        // .oauth2ResourceServer()
+        // .jwt();
+        // .decoder(jwtDecoder());
     }
 
     CorsConfigurationSource corsConfigurationSource() {

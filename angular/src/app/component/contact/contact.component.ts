@@ -30,11 +30,19 @@ export class ContactComponent implements OnInit {
     const email = this.emailForm.value;
 
     // DEVELOPMENT
-    // const send2SB = await lastValueFrom(this.http.post<any>('http://localhost:8080/api/email',JSON.stringify(email),{headers:{'Content-Type':'application/json'}})).then(()=>{
-    //   alert('Your email has been sent!')});
+    const send2SB = await lastValueFrom(this.http.post<any>('http://localhost:8080/api/email',JSON.stringify(email),{headers:{'Content-Type':'application/json'}})).then(()=>{
+      alert('Your email has been sent!')})
+      .catch(err=>{
+        alert('Opps! Something went wrong')
+        console.log(err);
+      });
     // PRODUCTION
-    const send2SB = await lastValueFrom(this.http.post<any>('https://my-cute-shop.herokuapp.com/api/email',JSON.stringify(email),{headers:{'Content-Type':'application/json'}})).then(()=>{
-      alert('Your email has been sent!')});
+    // const send2SB = await lastValueFrom(this.http.post<any>('https://my-cute-shop.herokuapp.com/api/email',JSON.stringify(email),{headers:{'Content-Type':'application/json'}})).then(()=>{
+    //   alert('Your email has been sent!')})
+    //   .catch(err=>{
+    //     alert('Opps, something went wrong!')
+    //     console.log(err);
+    //   });
     this.emailForm.reset();
     this.router.navigate(['/']);
   }

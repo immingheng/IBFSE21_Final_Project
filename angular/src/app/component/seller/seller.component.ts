@@ -53,7 +53,10 @@ export class SellerComponent implements OnInit {
         this.imageUrls.push(this.imageUrl);
       })
       // console.log(this.imageUrls);
-    });
+    })
+    .catch(err=>{
+      alert('Something went wrong!');
+    })
   }
 
 
