@@ -15,7 +15,6 @@ export class SellerComponent implements OnInit {
   constructor(private shopeeSvc: ShopeeItemsService,
               private lazadaSvc: LazadaItemsService,
               private activatedRoute: ActivatedRoute,
-              private router: Router,
               private domSanitizer: DomSanitizer) { }
   shop_id: any;
   async ngOnInit(){
@@ -49,6 +48,7 @@ export class SellerComponent implements OnInit {
         let itemImage = item.image.replace('"','');
         itemImage = itemImage.replace('"','');
         // console.log(itemImage.toString());
+        // ANGULAR BY DEFAULT WILL WANT TO SANITISE THIS TO PROTECT ONE FROM XSS SCRIPTING THEREFORE HAVE TO SANITISE IMAGE URL WITH DOMSANITIZER FOR IMAGES TO BE DISPLAYED
         this.imageUrl = this.domSanitizer.bypassSecurityTrustUrl(itemImage);
         this.imageUrls.push(this.imageUrl);
       })
@@ -58,12 +58,13 @@ export class SellerComponent implements OnInit {
 
 
   public getLazadaListings(){
-
+    //TODO
   }
 
 
 
   public unlinkShop(){
+    this.shop_id = null;
   }
 
 

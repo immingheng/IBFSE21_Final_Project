@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 // import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 import ibf2021.springboot.models.Listing;
 import ibf2021.springboot.services.ShopeeAPICallService;
 
-@CrossOrigin
 @RestController
 @RequestMapping(path = "/api/shopee", produces = MediaType.APPLICATION_JSON_VALUE)
 public class ShopeeRESTController {
@@ -25,6 +23,10 @@ public class ShopeeRESTController {
 
     @GetMapping(path = "listings", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Listing>> getAllListing(@RequestParam String shop_id) {
+        // CHECK IF shop_id exists in DB,
+        // If so, retrieve its data from DB
+        // else make a call into shopee and retrieve them?
+
         return shopeeSvc.getItemLists(shop_id);
     }
 

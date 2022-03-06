@@ -83,11 +83,16 @@ public class ShopeeAPICallService {
             logger.info("item_id >> " + item_id);
             JsonObject itemDetail = ResponseEntity2JSON(getItemDetail(item_id, shop_id)).getJsonObject("item");
             Listing listing = new Listing();
-            listing.setImage(itemDetail.getJsonArray("images").get(0).toString());
-            listing.setDescription(itemDetail.getString("description"));
-            listing.setPrice(itemDetail.getJsonNumber("price").longValue());
-            listing.setProduct_name(itemDetail.getString("name"));
-            listing.setQuantity(itemDetail.getInt("stock"));
+            String image = itemDetail.getJsonArray("images").get(0).toString();
+            String description = itemDetail.getString("description");
+            float price = itemDetail.getJsonNumber("price").longValue();
+            String name = itemDetail.getString("name");
+            int quantity = itemDetail.getInt("stock");
+            listing.setImage(image);
+            listing.setDescription(description);
+            listing.setPrice(price);
+            listing.setProduct_name(name);
+            listing.setQuantity(quantity);
             listings.add(listing);
         }
         return ResponseEntity.ok().body(listings);

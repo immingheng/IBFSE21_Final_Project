@@ -7,7 +7,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 import ibf2021.springboot.configurations.EmailConfig;
 import ibf2021.springboot.models.Email;
 
-@CrossOrigin
 @RestController
 @RequestMapping(path = "/api/email", produces = MediaType.APPLICATION_JSON_VALUE)
 public class EmailRESTController {
