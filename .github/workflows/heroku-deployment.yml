@@ -7,10 +7,8 @@ on:
 
 jobs:
   build:
-
-  runs-on: ubuntu-latest
-    
-  steps:
+    runs-on: ubuntu-latest
+    steps:
     - uses: actions/checkout@v2
     - name: Deploy to Heroku
       uses: AkhileshNS/heroku-deploy@v3.12.12
