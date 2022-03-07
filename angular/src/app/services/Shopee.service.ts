@@ -13,15 +13,15 @@ export class ShopeeItemsService{
   items!:Item[];
   item_ids: number[] = [];
   data!: Listing;
-  public getListings(shop_id: any): Promise<Item[]> {
+  public getListings(shop_id: string): Promise<Item[]> {
     const params = new HttpParams().set('shop_id', shop_id);
 
     // DEVELOPMENT
-    return lastValueFrom(this.http.get<Item[]>('http://localhost:8080/api/shopee/listings', {params}))
+    // return lastValueFrom(this.http.get<Item[]>('http://localhost:8080/api/shopee/listings', {params}))
 
 
     // PRODUCTION
-    // return lastValueFrom(this.http.get<Item[]>('https://my-cute-shop.herokuapp.com/api/shopee/listings', {params}))
+    return lastValueFrom(this.http.get<Item[]>('https://my-cute-shop.herokuapp.com/api/shopee/listings', {params}))
   };
 
 

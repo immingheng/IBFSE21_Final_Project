@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -34,43 +34,64 @@ export class SellerComponent implements OnInit {
   lazadaLinked: boolean = false;
 
 
-  async ngOnInit(){
-    // check if user exists on db and extract shopee_shop_id by making a call to the backend
-    lastValueFrom(this.http.get<Number>('http://localhost:8080/api/auth/user/shopee_shop_id')).then(r=>{
+  async ngOnInit() {
+    // check if user exists on db and extract shopee_shop_id by making a call to the backend - number = exists, 0 = doesn't exists
+    await lastValueFrom(this.http.get<Number>('https://my-cute-shop.herokuapp.com/api/auth/user/shopee_shop_id')).then(async r=>{
       this.shopee_id = r;
-      console.log(this.shopee_id);
-      if (this.shopee_id!=null){
+      console.log("From DB -> " +this.shopee_id);
+      if (this.shopee_id!=0){
+        // IF BACKEND RETURNS A SHOPEE_ID, ACCOUNT EXISTS W EXISTING SHOPEE_SHOP_ID
         this.shopeeExists = true;
+        // SET SHOP_ID as that returned from backend
         this.shop_id=this.shopee_id;
         console.log("this.shop_id is "+this.shop_id);
+        this.shopeeLinked = true;
+
+        // Make a call to another endpoint to retrieve the items within the database to populate in the table.
+        const params = new HttpParams().set('shopee_shop_id', this.shop_id);
+        console.log("params --> "+params);
+        await lastValueFrom(this.http.get<Item[]>('https://my-cute-shop.herokuapp.com/api/auth/user/shopeeItems',{params})).then(result => {
+          console.log("Items are populated based on items in database!");
+          this.imageUrls = [];
+          result.forEach(item =>{
+            let itemImage = item.image.replace('"','');
+            itemImage = itemImage.replace('"','');
+            this.imageUrl = this.domSanitizer.bypassSecurityTrustUrl(itemImage);
+            this.imageUrls.push(this.imageUrl);
+          })
+          this.shopeeItems = result;
+          console.log(this.shopeeItems);
+        })
+
       } else {
+        // shopee_id = 0 (Account not linked with a shopee id) therefore shopee doesn't exists in db
         this.shopeeExists = false;
+        console.log("SHOPEE ID = 0 therefore SHOPEE IS NOT LINKED")
+        // THIS IS RUN WHEN CLIENT LINK THEIR ACCOUNT TO GET SHOPEE_ID FROM URL AFTER LINKING IT
+        this.shop_id = await this.activatedRoute.snapshot.queryParams['shop_id'];
+        console.log(this.shop_id);
+        if (this.shop_id!=null){
+          this.shopeeLinked=true;
+          this.shopeeExists = true;
+        }
       }
-    }).catch(err=>{
-      console.log('SHOPEE SHOP IS NOT LINKED TO THIS USER');
-      console.log(err);
-    }
+      }).catch(err=>{
+        console.log('SHOPEE SHOP IS NOT LINKED TO THIS USER');
+        console.log(err);
+      }
 
     );
 
-    if (this.shop_id==0){
-      this.shop_id = await this.activatedRoute.snapshot.queryParams['shop_id'];
-      console.log(this.shop_id);
-      if (this.shop_id==null){
-        console.log("queryParams of shop_id does not exists!")
-      this.shopeeLinked = false;
-      } else {
-      this.shopeeLinked = true;
-      }
-    }
   }
 
 
 
   public getShopeeListings(){
+    // CALL SHOPEESVC and getListing, passing in shop_id
     this.shopeeSvc.getListings(this.shop_id).then(r=>{
       this.shopeeItems = r;
-      console.log(r);
+      console.log("Items are populated using Shopee API call!");
+      this.imageUrls = [];
       r.forEach(item=>{
         let itemImage = item.image.replace('"','');
         itemImage = itemImage.replace('"','');
@@ -95,6 +116,7 @@ export class SellerComponent implements OnInit {
 
 
   public unlinkShop(){
+    //TO BE IMPLEMENTED
     this.shop_id = null;
   }
 

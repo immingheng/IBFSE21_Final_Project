@@ -33,7 +33,6 @@ public class AuthService {
         logger.info("USER'S EMAIL BASED ON JWT IS " + email);
         user.setName(name);
         logger.info("USER'S NAME BASED ON JWT IS " + name);
-
         return user;
     }
 

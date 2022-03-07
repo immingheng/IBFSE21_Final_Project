@@ -1,5 +1,7 @@
 package ibf2021.springboot.models;
 
+import org.springframework.jdbc.support.rowset.SqlRowSet;
+
 // Model of what I want to extract from shopee api call to be passed back to front-end
 public class Listing {
     String image;
@@ -7,16 +9,21 @@ public class Listing {
     String description;
     int quantity;
     float price;
+    int product_id;
+    int shopee_shop_id;
 
-    public Listing() {
-    }
-
-    public Listing(String image, String product_name, String description, int quantity, float price) {
+    public Listing(String image, String product_name, String description, int quantity, float price, int product_id,
+            int shopee_shop_id) {
         this.image = image;
         this.product_name = product_name;
         this.description = description;
         this.quantity = quantity;
         this.price = price;
+        this.product_id = product_id;
+        this.shopee_shop_id = shopee_shop_id;
+    }
+
+    public Listing() {
     }
 
     public String getImage() {
@@ -59,29 +66,32 @@ public class Listing {
         this.price = price;
     }
 
-    public Listing image(String image) {
-        setImage(image);
-        return this;
+    public int getProduct_id() {
+        return this.product_id;
     }
 
-    public Listing product_name(String product_name) {
-        setProduct_name(product_name);
-        return this;
+    public void setProduct_id(int product_id) {
+        this.product_id = product_id;
     }
 
-    public Listing description(String description) {
-        setDescription(description);
-        return this;
+    public int getShopee_shop_id() {
+        return this.shopee_shop_id;
     }
 
-    public Listing quantity(int quantity) {
-        setQuantity(quantity);
-        return this;
+    public void setShopee_shop_id(int shopee_shop_id) {
+        this.shopee_shop_id = shopee_shop_id;
     }
 
-    public Listing price(float price) {
-        setPrice(price);
-        return this;
+    public static Listing populate(SqlRowSet rs) {
+        Listing listing = new Listing();
+        listing.setDescription(rs.getString("product_description"));
+        listing.setImage(rs.getString("image_thumbnail"));
+        listing.setPrice(rs.getFloat("price"));
+        listing.setProduct_id(rs.getInt("product_id"));
+        listing.setProduct_name(rs.getString("product_name"));
+        listing.setQuantity(rs.getInt("quantity"));
+        listing.setShopee_shop_id(rs.getInt("shopee_shop_id"));
+        return listing;
     }
 
 }

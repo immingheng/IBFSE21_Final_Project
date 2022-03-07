@@ -4,4 +4,6 @@ export interface Item{
   description: String;
   quantity: number;
   price: number;
+  product_id: number;
+  shopee_shop_id: number;
 }

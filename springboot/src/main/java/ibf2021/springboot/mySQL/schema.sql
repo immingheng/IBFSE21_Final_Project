@@ -14,10 +14,11 @@ create table user(
     name varchar(64) not null, 
     email varchar(256) not null,
     shopee_shop_id int not null,
-    primary key (user_id, email)
+    primary key (user_id, email,shopee_shop_id)
 );
 
-create unique index email on user(email);
+-- CREATE UNIQUE INDEX TO PREVENT DUPLICATE ENTRY
+create unique index shopee_shop_id on user(shopee_shop_id);
 
 -- create table with all fields of a listing
 -- TODO : THIS IS INCOMPLETE!
@@ -25,15 +26,15 @@ create table shopee(
 	product_id int not null,
     shopee_shop_id int not null,
     image_thumbnail varchar(256),
-    product_name varchar(256),
-    product_description varchar(256),
-    quantity int,
-    price float,
+    -- SHOPEE RESTRICT PRODUCT NAME TO 100 CHAR
+    product_name varchar(100),
+    -- SHOPEE RESTRICT DESCRIPTION TO 1000 CHAR
+    product_description varchar(1000),
+    quantity int not null,
+    price float not null,
     primary key(product_id),
-    constraint fk_shopee_id foreign key(shopee_shop_id) references user(user_id)
+    constraint fk_shopee_id foreign key(shopee_shop_id) references user(shopee_shop_id)
 );
 
-
-
--- WHEN INSERTING DETAILS OF A USER - ALWAYS HASH THE PASSWORD ! NEVER SAVE THE RAW PASSWORD! 
--- TO EXTRACT IF USER EXISTS, SELECT COUNT(*) 
+-- CREATE UNIQUE INDEX TO PREVENT DUPLICATE ENTRY
+create unique index product_name on shopee(product_name);

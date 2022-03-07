@@ -11,6 +11,7 @@ import java.util.logging.Logger;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import ibf2021.springboot.models.Listing;
+import ibf2021.springboot.repositories.ShopeeRepo;
 
 import org.apache.commons.codec.binary.Hex;
 
@@ -29,6 +31,9 @@ import jakarta.json.JsonValue;
 
 @Service
 public class ShopeeAPICallService {
+
+    @Autowired
+    ShopeeRepo shopeeRepo;
 
     private static final Logger logger = Logger.getLogger(ShopeeAPICallService.class.getName());
 
@@ -57,17 +62,21 @@ public class ShopeeAPICallService {
 
     // METHOD RETURNS UP TO A MAXIMUM OF 100 PRODUCTS - WILL HAVE TO IMPLEMENT
     // PAGINATION &/ SEARCH IN THE FUTURE FOR BOTH CLIENT AND SERVER SIDE
-    public ResponseEntity<List<Listing>> getItemLists(String shop_id) {
+    public ResponseEntity<List<Listing>> getItemLists(Integer shop_id) {
+        logger.info("SHOP ID PASSED INTO getItemLists method in SVC ->" + shop_id);
+
         List<Listing> listings = new ArrayList<>();
+
         String URI = "https://partner.test-stable.shopeemobile.com/api/v1/items/get";
         JsonObject requestBody = Json.createObjectBuilder()
                 .add("pagination_offset", 0)
                 .add("pagination_entries_per_page", 100)
-                .add("shopid", Integer.parseInt(shop_id))
+                .add("shopid", shop_id)
                 .add("partner_id", SHOPEE_PARTNER_ID)
                 .add("timestamp", getCurrentEpochTime())
                 .build();
         logger.info("REQUEST BODY THAT WAS BUILT FOR getItemLists -> " + requestBody.toString());
+
         RequestEntity<String> req = RequestEntity.post(URI)
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", authHashHMACSHA256(URI, requestBody.toString(), SHOPEE_TEST_SECRET_KEY))
@@ -76,25 +85,45 @@ public class ShopeeAPICallService {
         RestTemplate template = new RestTemplate();
         ResponseEntity<String> resp = template.exchange(req, String.class);
         logger.info("RESPONSE FROM SHOPEE API ->" + resp.toString());
+
+        // GET PRODUCT_ID
+
         JsonObject data = ResponseEntity2JSON(resp);
+        // Convert ResponseEntity to JSON
         JsonArray jarray = data.getJsonArray("items");
         for (JsonValue item : jarray) {
-            int item_id = item.asJsonObject().getInt("item_id");
-            logger.info("item_id >> " + item_id);
-            JsonObject itemDetail = ResponseEntity2JSON(getItemDetail(item_id, shop_id)).getJsonObject("item");
             Listing listing = new Listing();
+            int item_id = item.asJsonObject().getInt("item_id");
+
+            logger.info("item_id >> " + item_id);
+
+            // Converting getItemDetail response to JSON
+            JsonObject itemDetail = ResponseEntity2JSON(getItemDetail(item_id, shop_id)).getJsonObject("item");
+
+            // itemDetail = LISTING DETAIL
             String image = itemDetail.getJsonArray("images").get(0).toString();
             String description = itemDetail.getString("description");
             float price = itemDetail.getJsonNumber("price").longValue();
             String name = itemDetail.getString("name");
             int quantity = itemDetail.getInt("stock");
+            int shopee_shop_id = itemDetail.getInt("shopid");
+
+            logger.info("shopee_shop_id from itemDetail->" + shopee_shop_id);
+
             listing.setImage(image);
             listing.setDescription(description);
             listing.setPrice(price);
             listing.setProduct_name(name);
             listing.setQuantity(quantity);
+            listing.setProduct_id(item_id);
+            listing.setShopee_shop_id(shopee_shop_id);
+            logger.info("SHOPEE SHOP ID AFTER SETTING IT IN LISTING -> " + listing.getShopee_shop_id());
             listings.add(listing);
         }
+        // WANT TO ALSO BATCH UPDATE INTO DB TO STORE INDIVIDUAL LISTING IN mySQL
+
+        shopeeRepo.batchUpdateListings2DB(listings);
+
         return ResponseEntity.ok().body(listings);
     }
 
@@ -107,11 +136,11 @@ public class ShopeeAPICallService {
 
     // Method to call after getting entire item lists to extract item_id and obtain
     // entire item detail to be saved into DB
-    public ResponseEntity<String> getItemDetail(int itemId, String shop_id) {
+    public ResponseEntity<String> getItemDetail(int itemId, Integer shop_id) {
         String URI = "https://partner.test-stable.shopeemobile.com/api/v1/item/get";
         JsonObject requestBody = Json.createObjectBuilder()
                 .add("item_id", itemId)
-                .add("shopid", Integer.parseInt(shop_id))
+                .add("shopid", shop_id)
                 .add("partner_id", SHOPEE_PARTNER_ID)
                 .add("timestamp", getCurrentEpochTime())
                 .build();
@@ -127,6 +156,7 @@ public class ShopeeAPICallService {
         return resp;
     }
 
+    // INCOMPLETE - TO BE IMPLEMENTED IN THE FUTURE
     // Assumes that there will only be ONE IMAGE URL else have to carry out a loop
     // to handle a Collection of image URL accordingly
     public ResponseEntity<String> createItem(String imageURL, String shop_id) {
