@@ -90,6 +90,15 @@ const appRoutes : Routes = [
 
             }
           },
+          {
+            // Match any request during production
+            uri: 'https://my-cute-shop.herokuapp.com/*',
+            tokenOptions:{
+                // The attached token should target this audience
+                audience: 'https://my-cute-shop.herokuapp.com/api',
+                scope: 'read:current_user'
+            }
+          }
         ]
       }
 
