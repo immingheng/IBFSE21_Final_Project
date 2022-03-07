@@ -35,8 +35,12 @@ export class SellerComponent implements OnInit {
 
 
   async ngOnInit() {
+
     // check if user exists on db and extract shopee_shop_id by making a call to the backend - number = exists, 0 = doesn't exists
+    // PRODUCTION
     await lastValueFrom(this.http.get<Number>('https://my-cute-shop.herokuapp.com/api/auth/user/shopee_shop_id')).then(async r=>{
+      // DEVELOPMENT
+      // await lastValueFrom(this.http.get<Number>('http://localhost:8080/api/auth/user/shopee_shop_id')).then(async r=>{
       this.shopee_id = r;
       console.log("From DB -> " +this.shopee_id);
       if (this.shopee_id!=0){
@@ -50,7 +54,11 @@ export class SellerComponent implements OnInit {
         // Make a call to another endpoint to retrieve the items within the database to populate in the table.
         const params = new HttpParams().set('shopee_shop_id', this.shop_id);
         console.log("params --> "+params);
+        // PRODUCTION
         await lastValueFrom(this.http.get<Item[]>('https://my-cute-shop.herokuapp.com/api/auth/user/shopeeItems',{params})).then(result => {
+
+        // DEVELOPMENT
+          // await lastValueFrom(this.http.get<Item[]>('http://localhost:8080/api/auth/user/shopeeItems',{params})).then(result => {
           console.log("Items are populated based on items in database!");
           this.imageUrls = [];
           result.forEach(item =>{

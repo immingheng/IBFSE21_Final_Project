@@ -44,6 +44,7 @@ export class ContactComponent implements OnInit {
         alert('Opps, something went wrong!')
         console.log(err);
       });
+
     this.emailForm.reset();
     this.router.navigate(['/']);
 
