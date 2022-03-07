@@ -1,5 +1,6 @@
 package ibf2021.springboot.models;
 
+// TO BE IMPLEMENTED WITH ADD ITEM
 public class Item {
     private String product_name;
     private String category_name;

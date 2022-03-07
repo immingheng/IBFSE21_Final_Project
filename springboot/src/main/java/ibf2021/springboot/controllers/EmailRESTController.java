@@ -1,5 +1,7 @@
 package ibf2021.springboot.controllers;
 
+import java.util.Properties;
+
 // import java.util.logging.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +39,12 @@ public class EmailRESTController {
         if (emailConfig.getPassword() == null) {
             System.err.println("spring.email.password IS NOT SET IN SYSTEM ENVIRONMENT!");
         }
+
+        Properties props = mailSender.getJavaMailProperties();
+        props.put("mail.transport.protocol", "smtp");
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.debug", "true");
 
         // Creating email instance
         SimpleMailMessage mailMessage = new SimpleMailMessage();

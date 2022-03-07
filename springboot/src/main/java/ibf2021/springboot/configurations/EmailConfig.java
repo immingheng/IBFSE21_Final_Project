@@ -12,8 +12,7 @@ public class EmailConfig {
     @Value("${spring.mail.port}")
     private int port;
 
-    @Value("${spring.mail.username}")
-    private String username;
+    private String username = System.getenv("spring.email.username");
 
     private String password = System.getenv("spring.email.password");
 
