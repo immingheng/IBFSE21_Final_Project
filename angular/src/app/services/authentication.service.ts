@@ -23,7 +23,7 @@ export class AuthService {
              * replace with your API-Audience
              * This is very important to retrieve a valid access_token for our API
              * */
-            audience: 'http://localhost:8080',
+            audience: 'https://my-cute-shop.herokuapp.com/api',
         },
     };
 

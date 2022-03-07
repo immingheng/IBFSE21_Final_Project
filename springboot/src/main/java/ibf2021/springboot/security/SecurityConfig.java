@@ -32,10 +32,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
 
         // PROTECTING API END POINTS
-        http.authorizeRequests()
+        http.cors().configurationSource(corsConfigurationSource()).and().csrf().and()
+                .authorizeRequests()
                 .mvcMatchers(HttpMethod.POST, "/api/mail/**").permitAll()
-                .mvcMatchers(HttpMethod.GET, "/api/**").permitAll()
-                .and().cors().configurationSource(corsConfigurationSource())
+                .anyRequest()
+                .authenticated()
                 .and()
                 .oauth2ResourceServer()
                 .jwt();

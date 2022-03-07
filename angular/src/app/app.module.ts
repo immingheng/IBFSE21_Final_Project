@@ -20,7 +20,7 @@ import { AboutComponent } from './component/about/about.component';
 import { ContactComponent } from './component/contact/contact.component';
 // LOGIN and SIGNUP HAS BEEN DELEGATED TO AUTH0 FOR JWT VERIFICATION PURPOSES USING THEIR UNIVERSAL LOGIN
 // import { LoginComponent } from './authentication/login/login.component';
-// import { SignupComponent } from './component/signup/signup.component';
+// import { SignupComponent } from './authentication/signup/signup.component';
 import { BuyerComponent } from './component/buyer/buyer.component';
 import { SellerComponent } from './component/seller/seller.component';
 import { AddNewItemComponent } from './component/add-new-item/add-new-item.component';
@@ -74,27 +74,24 @@ const appRoutes : Routes = [
       // Specify configuration for interceptor
       // Interceptor will intercept any request to the specified uri to check if token exists and handle it accordingly.
       // THEREFORE ANY CALL TO THE SERVER WITH ROUTE /API/* SHOULD BE ADDED WITH THE INTERCEPTORS
-      // httpInterceptor: {
-      //   allowedList:[
-      //     {
-      //       // Match any request that during development
-      //       uri:'http://localhost:8080/api/*',
-      //       tokenOptions: {
-      //         // The attached token should target this audience
-      //         audience: 'http://localhost:8080',
+      audience: 'https://my-cute-shop.herokuapp.com/api',
+      scope: 'read:current_user',
 
-      //       }
-      //     },
-      //     {
-      //       // prod
-      //       uri:'https://my-cute-shop.herokuapp.com/api/*',
-      //       tokenOptions:{
-      //         audience: 'https://my-cute-shop.herokuapp.com',
-      //         scope: 'read:current_user'
-      //       }
-      //     }
-      //   ]
-      // }
+
+      httpInterceptor: {
+        allowedList:[
+          {
+            // Match any request that during development
+            uri:'http://localhost:8080/*',
+            tokenOptions: {
+              // The attached token should target this audience
+              audience: 'https://my-cute-shop.herokuapp.com/api',
+              scope: 'read:current_user'
+
+            }
+          },
+        ]
+      }
 
     })
     ],
