@@ -17,3 +17,4 @@ jobs:
           # The appname to use for deploying/updating
           heroku_app_name: ${{secrets.HEROKU_APP}}
           appdir: springboot
+# I tested this file on a separate repository and it worked! YAY!
